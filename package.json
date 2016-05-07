@@ -1,0 +1,14 @@
+{
+  "name": "cyberoam_facebook",
+  "version": "0.0.0",
+  "description": "Cyberoam social login",
+  "main": "server.js",
+  "repository": "",
+  "author": "",
+  "dependencies": {
+    "express": "~3.2.4",
+    "socket.io": "~0.9.14",
+    "mysql": "*",
+    "macfromip" : "*"
+  }
+}
