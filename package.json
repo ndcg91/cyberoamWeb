@@ -6,9 +6,11 @@
   "repository": "",
   "author": "",
   "dependencies": {
-    "express": "~3.2.4",
-    "socket.io": "~0.9.14",
+    "express": "*",
+    "socket.io": "*",
     "mysql": "*",
-    "macfromip" : "*"
+    "macfromip" : "*",
+    "body-parser" : "*",
+    "morgan": "*"
   }
 }

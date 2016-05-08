@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
 
 
 function createUser(user,pass){
-  return new Promise((resolve,reject) => {
+  return new Promise(function (resolve,reject){
     var values = {username:user,attribute:'User-Password',op:':=',value:pass};
     connection.query('INSERT INTO radcheck SET ?',values,function(err,result){
       if (err){
@@ -24,7 +24,7 @@ function createUser(user,pass){
 }
 
 function checkUser(user,pass){
-  return new Promise((resolve,reject) => {
+  return new Promise(function (resolve,reject) {
     connection.query('Select * from radcheck where username ='+user+'and value ='+pass,function(err,rows,fields){
       if (err){
         return reject
@@ -40,7 +40,7 @@ function checkUser(user,pass){
 
 
 exports.login = function(user,pass){
-    return new Promise((resolve,reject){
+    return new Promise(function (resolve,reject){
         checkUser(user,pass).then(function(res){
             if (res.length > 0){
                 //user has been already created

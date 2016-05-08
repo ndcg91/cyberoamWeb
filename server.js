@@ -9,9 +9,11 @@ var server              = require('http').createServer(app);
 var io                  = require("socket.io").listen(server);
 var bodyParser          = require('body-parser');
 var port                = process.env.PORT || 8080;
-var client               = require('./modules/mysql.js');
+var client              = require('./modules/mysql.js');
 var macfromip           = require('macfromip');
-
+var bodyParser 	 	= require('body-parser');
+var morgan              = require('morgan');
+var router 		= express.Router();
 
 
 
@@ -22,13 +24,13 @@ var macfromip           = require('macfromip');
 // Creates a new instance of SimpleServer with the following options:
 //  * `port` - The HTTP port to listen on. If `process.env.PORT` is set, _it overrides this value_.
 //
-var router = express.Router();
 
 
 io.on('connection', function (socket) {
 });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(morgan("dev"));
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials','true');
@@ -54,7 +56,8 @@ router.route('/user/')
     var user = req.body.username;
     var password = req.body.password;
     var ip = req.headers['x-forwarded-for']
-    
+    console.log(req.ip);
+    console.log(ip);    
     macfromip.getMac('192.168.2.169', function(err, data){
       if(err){
         console.log(err);
@@ -70,4 +73,4 @@ router.route('/user/')
   })
 
 server.listen(port);
-
+console.log("ok api set");
