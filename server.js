@@ -55,15 +55,15 @@ router.route('/user/')
   .post(function(req,res){
     var user = req.body.username;
     var password = req.body.password;
-    var ip = req.headers['x-forwarded-for']
-    console.log(req.ip);
-    console.log(ip);    
-    macfromip.getMac('192.168.2.169', function(err, data){
+    var ip = (req.ip).split(":")[0].trim();
+    console.log(ip);
+    macfromip.getMac(ip, function(err, data){
       if(err){
         console.log(err);
         res.send(403)
       }
       console.log(data);
+      var mac = data;
       client.login(user,password).then(function(res){
         res.send(200)
       },function(err){
