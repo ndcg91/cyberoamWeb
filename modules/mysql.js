@@ -1,10 +1,12 @@
+var config		= require('./config.js');
 var mysql               = require('mysql');
 var exports             = module.exports = {}
+var Promise 		= require('bluebird')
 var connection = mysql.createConnection({
-  host     : '127.0.0.1',
-  user     : 'root',
-  password : 'admin',
-  database : 'radius'
+  host     : config.host,
+  user     : config.user,
+  password : config.password,
+  database : config.db
 });
 
 
@@ -12,12 +14,13 @@ var connection = mysql.createConnection({
 function createUser(user,pass){
   return new Promise(function (resolve,reject){
     var values = {username:user,attribute:'User-Password',op:':=',value:pass};
+    console.log(values);
     connection.query('INSERT INTO radcheck SET ?',values,function(err,result){
       if (err){
-        return reject
+        reject()
       }
       else{
-        return resolve(result)
+        resolve(result)
       }
     });
   })
@@ -25,11 +28,14 @@ function createUser(user,pass){
 
 function checkUser(user,pass){
   return new Promise(function (resolve,reject) {
-    connection.query('Select * from radcheck where username ='+user+'and value ='+pass,function(err,rows,fields){
+    console.log("checking user" + user + " " + pass);
+    connection.query('Select * from radcheck where username = "'+user+'" and value = "'+pass+'"',function(err,rows,fields){
       if (err){
-        return reject
+	console.log(err);
+        reject()
       }
       else{
+	//console.log(rows,fields);
         return resolve(rows)
       }
     });
@@ -44,18 +50,18 @@ exports.login = function(user,pass){
         checkUser(user,pass).then(function(res){
             if (res.length > 0){
                 //user has been already created
-                return resolve(true)
+                resolve(true)
             }
             else{
                 //user has not been created
                 createUser(user,pass).then(function(res){
-                    return resolve(true)
+                    resolve(true)
                 }, function(err){
-                    return reject
+                    reject()
                 })
             }
         },function(err){
-            return reject
+            reject();
         })
     })
 }

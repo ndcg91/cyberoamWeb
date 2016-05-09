@@ -55,7 +55,8 @@ router.route('/user/')
   .post(function(req,res){
     var user = req.body.username;
     var password = req.body.password;
-    var ip = (req.ip).split(":")[0].trim();
+    console.log(req.ip.split(":"));
+    var ip = (req.ip).split(":")[3].trim();
     console.log(ip);
     macfromip.getMac(ip, function(err, data){
       if(err){
@@ -64,9 +65,11 @@ router.route('/user/')
       }
       console.log(data);
       var mac = data;
-      client.login(user,password).then(function(res){
+      client.login(user,password).then(function(result){
+	console.log(result);
         res.send(200)
       },function(err){
+	console.log(err);
         res.send(403)
       })
     });
