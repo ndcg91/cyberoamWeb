@@ -12,6 +12,8 @@
     "macfromip" : "*",
     "body-parser" : "*",
     "morgan": "*",
-    "bluebird": "*"
+    "bluebird": "*",
+    "passport":"*",
+    "passport-facebook":"*"	
   }
 }

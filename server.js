@@ -14,9 +14,11 @@ var macfromip           = require('macfromip');
 var bodyParser 	 	= require('body-parser');
 var morgan              = require('morgan');
 var router 		= express.Router();
-
-
-
+var exec 		= require('child_process').exec;
+var config 		= require('./config.js');
+var fbConfig		= require('./social/fb.js');
+var passport 		= require('passport');
+var FacebookStrategy 	= require('passport-facebook').Strategy;
 
 //
 // ## SimpleServer `SimpleServer(obj)`
@@ -24,6 +26,19 @@ var router 		= express.Router();
 // Creates a new instance of SimpleServer with the following options:
 //  * `port` - The HTTP port to listen on. If `process.env.PORT` is set, _it overrides this value_.
 //
+
+passport.use('facebook', new FacebookStrategy({
+  clientID        : fbConfig.appID,
+  clientSecret    : fbConfig.appSecret,
+  callbackURL     : fbConfig.callbackUrl
+}, 
+function(access_token, refresh_token, profile, done) {
+    // asynchronous
+    process.nextTick(function() {
+	console.log(profile);
+    });
+}));
+
 
 
 io.on('connection', function (socket) {
@@ -50,6 +65,17 @@ router.use(function(req, res, next) {
 router.get('/', function(req, res) {
   res.json({message: 'ok api set'});
 });
+
+router.get('/login/facebook', 
+  passport.authenticate('facebook', { scope : 'email' }
+));
+
+router.get('/login/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect : '/home',
+    failureRedirect : '/'
+  })
+);
 
 router.route('/user/')
   .post(function(req,res){
